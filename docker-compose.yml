@@ -1,0 +1,19 @@
+services:
+    app:
+        container_name: technical-challenge-app
+        build:
+            context: .
+            dockerfile: ./.docker/app.dockerfile
+        volumes:
+            - .:/var/www
+    web:
+        container_name: technical-challenge-web
+        build:
+            context: .
+            dockerfile: ./.docker/web.dockerfile
+        depends_on:
+            - "app"
+        ports:
+            - 8088:80
+        volumes:
+            - .:/var/www
