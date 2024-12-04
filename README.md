@@ -1,66 +1,131 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Prueba Técnica - Backend
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este repositorio contiene una implementación de una prueba técnica en la que se valida un token utilizando un caso de uso (`ValidateTokenUseCase`) en Laravel, junto con un middleware que verifica si el token cumple con ciertas reglas de validación. Además, se implementa un **`ShortUrlUseCase`** que utiliza un cliente **`TinyurlClient`** para acortar URLs.
 
-## About Laravel
+## Descripción
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+La tarea principal de esta prueba técnica es crear una solución en la que se validen los tokens en una API RESTful usando Laravel. Los tokens deben seguir las siguientes reglas:
+- Solo pueden contener los caracteres `()`, `{}`, y `[]`.
+- El contenido del token debe estar **balanceado** (cada apertura debe tener su cierre correspondiente en el orden correcto).
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+El sistema está diseñado para garantizar que las solicitudes a la API solo se realicen con tokens válidos, de lo contrario, se devolverá un error adecuado. Además, la aplicación incluye la funcionalidad para acortar URLs utilizando el servicio TinyURL.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Funcionalidades Implementadas
 
-## Learning Laravel
+1. **Validación del Token**:
+    - El token debe contener únicamente los caracteres `()`, `{}`, y `[]`.
+    - Si el token contiene otros caracteres, se lanza una excepción.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+2. **Balanceo del Token**:
+    - El token se valida para asegurarse de que está balanceado, es decir, que cada apertura tiene su cierre correspondiente (por ejemplo, `()` o `{[()]} `).
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+3. **Middleware de Validación**:
+    - Se ha creado un middleware `ValidateTokenMiddleware` que utiliza el caso de uso `ValidateTokenUseCase` para validar el token en la cabecera de las solicitudes entrantes.
+    - El middleware rechaza las solicitudes con tokens inválidos o desbalanceados, respondiendo con un código de error adecuado (`401`).
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+4. **Caso de Uso para Acortar URLs**:
+    - El **`ShortUrlUseCase`** es responsable de recibir una URL larga y devolver su versión acortada utilizando el servicio de TinyURL.
+    - Este caso de uso utiliza el **`TinyurlClient`**, un cliente que hace una solicitud HTTP a la API de TinyURL para generar el enlace corto.
 
-## Laravel Sponsors
+5. **Pruebas Unitarias y de Integración**:
+    - Se han implementado pruebas utilizando PHPUnit para asegurar que el middleware, los casos de uso y el cliente funcionen correctamente con tokens válidos e inválidos, así como con la funcionalidad de acortamiento de URLs.
+    - Las pruebas cubren la validación de caracteres permitidos, el balanceo de los caracteres, la operación del middleware y el funcionamiento de **`ShortUrlUseCase`** y **`TinyurlClient`**.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Estructura del Proyecto
 
-### Premium Partners
+```
+src/  
+├── Application/  
+│   ├── Responses/  
+│   │   └── ShortUrlResponse.php           # Respuesta con la URL acortada  
+│   ├── ShortUrlUseCase.php                # Caso de uso para acortar URLs  
+│   └── ValidateTokenUseCase.php           # Caso de uso para validar tokens  
+├── Domain/  
+│   ├── Clients/  
+│   │   └── ShortUrlClient.php             # Interfaz para cliente de acortamiento de URLs  
+│   ├── Entities/  
+│   │   └── Vo/  
+│   │       ├── ShortUrlVo.php             # Valor objeto para representar una URL acortada  
+│   │       ├── TokenVo.php                # Valor objeto para representar un token  
+│   │       └── UrlVo.php                  # Valor objeto para representar una URL  
+│   └── Services/  
+│       └── TokenValidator.php             # Servicio para validar los tokens  
+├── Infrastructure/  
+│   ├── Controllers/  
+│   │   └── ShortUrlController.php         # Controlador que maneja las solicitudes de acortamiento de URLs  
+│   ├── ExternalClients/  
+│   │   └── ShortUrlClient/  
+│   │       └── TinyurlClient.php          # Cliente de TinyURL para generar URLs cortas  
+│   └── Middleware/  
+│       └── ValidateTokenMiddleware.php    # Middleware para validar el token  
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Requisitos
 
-## Contributing
+Para ejecutar este proyecto, necesitas tener lo siguiente instalado:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **Git**.
+- **Docker**
 
-## Code of Conduct
+## Instalación
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. Clona el repositorio:
 
-## Security Vulnerabilities
+   ```bash
+   git clone git@github.com:palatinum/backend-technical-challenge.git
+   cd backend-technical-challenge
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+2. Crear el .env:
 
-## License
+   ```bash
+   cp .env.example .env
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+3. Ejecutar docker:
+   ```bash
+   docker compose up -d
+
+4. Ejecutar la instalacion de dependencias:
+   ```bash
+   docker exec -it technical-challenge-app composer install
+
+## Ejecución de los Tests
+
+1. Ejecuta los tests con el siguiente comando:
+   ```bash
+   docker exec -it technical-challenge-app ./vendor/bin/phpunit
+
+## Endpoints
+
+### **POST http://localhost:8088/api/v1/short-urls**
+
+Este endpoint recibe un `Authorization` header con el token que debe ser validado.
+
+Colección de Postman [backend-technical-challenge.postman_collection.json](./docs/backend-technical-challenge.postman_collection.json "backend-technical-challenge").
+
+
+#### **Requiere un Token Válido**
+
+- **Token válido**: `{}[]()` (balanceado, solo con los caracteres permitidos).
+- **Token inválido**:
+    - Contiene caracteres no permitidos: `invalid@token123`.
+    - Desbalanceado: `{[)]}`.
+
+#### **Respuesta Exitosa (200)**
+
+Si el token es válido, se procesará la solicitud:
+
+```json
+{
+    "url": "https://tinyurl.com/xxxxxx"
+}
+````
+
+#### **Respuesta de Error (401))**
+
+Si el token es inválido:
+
+```json
+{
+    "error": "Invalid token"
+}
+````

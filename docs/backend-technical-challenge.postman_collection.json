@@ -1,0 +1,50 @@
+{
+	"info": {
+		"_postman_id": "e761647d-078a-4ed5-b5aa-85e5894c8d54",
+		"name": "backend-technical-challenge",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9428357"
+	},
+	"item": [
+		{
+			"name": "shortUrl",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "()",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"url\": \"https://i.pinimg.com/originals/43/bf/b0/43bfb03be49e58a4770c01efbfc8e4ed.gif\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8088/api/v1/short-urls",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"api",
+						"v1",
+						"short-urls"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
