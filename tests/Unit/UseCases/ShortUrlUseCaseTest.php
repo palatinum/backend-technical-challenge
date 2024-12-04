@@ -2,7 +2,9 @@
 
 namespace Tests\Unit\UseCases;
 
-class ShortUrlUseCaseTest
+use PHPUnit\Framework\TestCase;
+
+class ShortUrlUseCaseTest extends TestCase
 {
 
 }

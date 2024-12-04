@@ -2,7 +2,9 @@
 
 namespace Tests\Unit\UseCases;
 
-class ValidateTokenUseCaseTest
+use PHPUnit\Framework\TestCase;
+
+class ValidateTokenUseCaseTest extends TestCase
 {
 
 }

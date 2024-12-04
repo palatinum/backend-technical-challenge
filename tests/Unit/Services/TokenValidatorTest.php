@@ -2,7 +2,9 @@
 
 namespace Tests\Unit\Services;
 
-class TokenValidatorTest
+use PHPUnit\Framework\TestCase;
+
+class TokenValidatorTest extends TestCase
 {
 
 }

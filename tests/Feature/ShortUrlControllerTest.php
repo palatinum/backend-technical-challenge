@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
-class ShortUrlControllerTest
+use Tests\TestCase;
+
+class ShortUrlControllerTest extends TestCase
 {
 
 }
